@@ -1,26 +1,35 @@
 from scapy.all import *
 from scapy.contrib.bgp import *
-import mysql.connector
-from mysql.connector import Error
+from pymongo import MongoClient
 
 
 def check_exists(asn, ip):
     # print(f'SELECT EXISTS(SELECT * FROM network WHERE asn={asn} AND ip="{ip}"')
-    query = "SELECT EXISTS(SELECT * FROM network WHERE asn=%s AND ip=%s)"
-    args = (asn, ip)
+    #query = "SELECT EXISTS(SELECT * FROM network WHERE asn=%s AND ip=%s)"
+    #args = (asn, ip)
 
     try:
-        conn = mysql.connector.connect(host='192.168.1.11', database='my_database', user='my_user', password='my_password')
-        cursor = conn.cursor()
-        cursor.execute(query, args)
-        result = cursor.fetchone()
-        return result[0] == 1
+        # Create a MongoClient instance
+        client = MongoClient('127.21.0.2', 27017, username='root', password='root')
+        db = client['my_database']
+
+        result = collection.count_documents({'asn': asn, 'ip': ip})
+        return result > 0
+
+        #   conn = mysql.connector.connect(host='192.168.1.11', database='my_database', user='my_user', password='my_password')
+        #   cursor = conn.cursor()
+        #   cursor.execute(query, args)
+        #   result = cursor.fetchone()
+        #   return result[0] == 1
     except Error as error:
         print(f'Error: {error}')
     finally:
-        if conn.is_connected():
-            cursor.close()
-            conn.close()
+        # Close the connection
+        client.close()
+
+        #   if conn.is_connected():
+        #       cursor.close()
+        #       conn.close()
 
 # Iterate over the packets
 def proxy(packet):

@@ -13,8 +13,15 @@ def check_exists(asn, ip):
         client = MongoClient('127.21.0.2', 27017, username='root', password='root')
         db = client['my_database']
 
-        result = collection.count_documents({'asn': asn, 'ip': ip})
-        return result > 0
+        # Send the query
+        collection = db['ASN']
+        query = {asn : ip}
+
+        result = collection.find(query)
+
+        #result = collection.count_documents({'asn': asn, 'ip': ip})
+
+        print(result)
 
         #   conn = mysql.connector.connect(host='192.168.1.11', database='my_database', user='my_user', password='my_password')
         #   cursor = conn.cursor()

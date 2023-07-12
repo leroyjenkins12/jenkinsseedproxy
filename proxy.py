@@ -3,22 +3,6 @@ from scapy.contrib.bgp import *
 import mysql.connector
 from mysql.connector import Error
 
-def get_asn(ip)
-
-def get_prefixes(asn)
-
-def register_asn(asn)
-
-def register_prefixes(asn, ip)
-
-def remove_asn(asn)
-
-def remove_prefix(asn, ip)
-
-def request_contact(ip)
-
-def register_contact(ip)
-
 
 def check_exists(asn, ip):
     # print(f'SELECT EXISTS(SELECT * FROM network WHERE asn={asn} AND ip="{ip}"')

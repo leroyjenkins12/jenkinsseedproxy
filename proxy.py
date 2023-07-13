@@ -8,12 +8,14 @@ def check_exists(asn, ip):
     client = MongoClient('172.22.0.2', 27017, username='root', password='root')
     db = client.data.ROOT
 
-    # Send the query
-    #query = ({"prefix/masks.ip":ip}, {"public_key":asn})
+    result = list(db.find({'prefix/masks.ip': ip}))
 
-    result = db.find({'asn': asn}, {'prefix/masks.ip': ip})
-
-    is_found = len(list(result)) > 0
+    is_found = False
+    
+    for entry in result:
+        if entry["asn"] == asn:
+            is_found = True
+            break
 
     # Close the connection
     client.close()

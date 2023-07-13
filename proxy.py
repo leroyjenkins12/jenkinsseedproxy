@@ -4,39 +4,21 @@ from pymongo import MongoClient
 
 
 def check_exists(asn, ip):
-    # print(f'SELECT EXISTS(SELECT * FROM network WHERE asn={asn} AND ip="{ip}"')
-    #query = "SELECT EXISTS(SELECT * FROM network WHERE asn=%s AND ip=%s)"
-    #args = (asn, ip)
+    # Create a MongoClient instance
+    client = MongoClient('172.22.0.2', 27017, username='root', password='root')
+    db = client.data.ROOT
 
-    try:
-        # Create a MongoClient instance
-        client = MongoClient('127.21.0.2', 27017, username='root', password='root')
-        db = client['my_database']
+    # Send the query
+    #query = ({"prefix/masks.ip":ip}, {"public_key":asn})
 
-        # Send the query
-        collection = db['ASN']
-        query = {asn : ip}
+    result = db.find({'asn': asn}, {'prefix/masks.ip': ip})
 
-        result = collection.find(query)
+    is_found = len(list(result)) > 0
 
-        #result = collection.count_documents({'asn': asn, 'ip': ip})
+    # Close the connection
+    client.close()
 
-        print(result)
-
-        #   conn = mysql.connector.connect(host='192.168.1.11', database='my_database', user='my_user', password='my_password')
-        #   cursor = conn.cursor()
-        #   cursor.execute(query, args)
-        #   result = cursor.fetchone()
-        #   return result[0] == 1
-    except Error as error:
-        print(f'Error: {error}')
-    finally:
-        # Close the connection
-        client.close()
-
-        #   if conn.is_connected():
-        #       cursor.close()
-        #       conn.close()
+    return is_found
 
 # Iterate over the packets
 def proxy(packet):

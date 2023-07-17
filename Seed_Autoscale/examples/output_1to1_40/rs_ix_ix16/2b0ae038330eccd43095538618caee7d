@@ -1,0 +1,113 @@
+router id 10.16.0.16;
+ipv4 table t_direct;
+protocol device {
+}
+protocol kernel {
+    ipv4 {
+        import all;
+        export all;
+    };
+    learn;
+}
+protocol direct local_nets{
+    ipv4 {
+        table t_direct;
+        import all;
+    };
+interface "ix16";
+}
+define LOCAL_COMM = (16, 0, 0);
+define CUSTOMER_COMM = (16, 1, 0);
+define PEER_COMM = (16, 2, 0);
+define PROVIDER_COMM = (16, 3, 0);
+
+ipv4 table t_bgp;
+
+protocol pipe {
+    table t_bgp;
+    peer table master4;
+    import none;
+    export all;
+}
+protocol pipe {
+    table t_direct;
+    peer table t_bgp;
+    import none;
+    export filter { bgp_large_community.add(LOCAL_COMM); accept; };
+}
+protocol bgp p_as184 {
+    ipv4 {
+    	table t_bgp;
+        import filter {
+            bgp_large_community.add(PROVIDER_COMM);
+            
+            accept;
+        };
+        export all;
+        next hop self;
+    };
+    
+    local 10.16.0.16 as 16;
+    neighbor 10.16.0.184 as 184;
+}
+protocol bgp p_as115 {
+    ipv4 {
+    	table t_bgp;
+        import filter {
+            bgp_large_community.add(PROVIDER_COMM);
+            
+            accept;
+        };
+        export all;
+        next hop self;
+    };
+    
+    local 10.16.0.16 as 16;
+    neighbor 10.16.0.115 as 115;
+}
+protocol bgp p_as116 {
+    ipv4 {
+    	table t_bgp;
+        import filter {
+            bgp_large_community.add(PROVIDER_COMM);
+            
+            accept;
+        };
+        export all;
+        next hop self;
+    };
+    
+    local 10.16.0.16 as 16;
+    neighbor 10.16.0.116 as 116;
+}
+protocol bgp p_as117 {
+    ipv4 {
+    	table t_bgp;
+        import filter {
+            bgp_large_community.add(PROVIDER_COMM);
+            
+            accept;
+        };
+        export all;
+        next hop self;
+    };
+    
+    local 10.16.0.16 as 16;
+    neighbor 10.16.0.117 as 117;
+}
+protocol bgp p_as96 {
+    ipv4 {
+    	table t_bgp;
+        import filter {
+            bgp_large_community.add(PROVIDER_COMM);
+            
+            accept;
+        };
+        export all;
+        next hop self;
+    };
+    
+    local 10.16.0.16 as 16;
+    neighbor 10.16.0.96 as 96;
+}
+

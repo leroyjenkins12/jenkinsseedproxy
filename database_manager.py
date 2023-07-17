@@ -20,7 +20,7 @@ def get_prefixes(collection, asn):
     return prefixes
 
 def register_asn(collection, asn):
-    if check_asn_conflict(collection, asn):
+    if not check_asn_conflict(collection, asn):
         new_data = {"asn":asn,
                     "public_key": "",
                     "prefix/masks": [],
@@ -34,25 +34,26 @@ def register_asn(collection, asn):
     else:
         return False
 
-def register_prefixes(collection, asn, ip):
-    if check_prefix_conflict(collection, asn, ip):
-        data = dict(collection.find({"asn":asn}))
-        new_data = {"ip": ip,
-                    "age": '',
-                    "validation": '',
-                    "contact": []}
-        data['prefix/masks'].append(new_data)
-        collection.update_one({"asn":asn}, {"$set": {'prefix/masks': data['prefix/masks']}})
-        return True
-    else:
-        return False
+def register_prefixes(collection, asn, prefixes):
+    for ip in prefixes:
+        if not check_prefix_conflict(collection, ip):
+            data = list(collection.find({"asn":asn}))[0]
+            new_data = {"ip": ip,
+                        "age": '',
+                        "validation": '',
+                        "contact": []}
+            data['prefix/masks'].append(new_data)
+            collection.update_one({"asn":asn}, {"$set": {'prefix/masks': data['prefix/masks']}})
+            print(ip, "added")
+        else:
+            print(ip, "not added")
 
 def remove_asn(collection, asn):
     collection.find_one_and_delete({"asn":asn})
     return True
 
 def remove_prefix(collection, asn, ip):
-    data = dict(collection.find({"asn":asn}))
+    data = list(collection.find({"asn":asn}, {"_id":0, "prefix/masks":1}))
     ips = data[0]['prefix/masks']
     for entry in ips:
         if entry["ip"] == ip:
@@ -70,9 +71,9 @@ def request_contact(collection, ip):
     return False
 
 def register_contact(collection, ip, contact):
-    data = collection.find({"prefix/masks.ip":ip})
-    ips = data[0]['prefix/masks']
-    for count in range(ips):
+    data = list(collection.find({"prefix/masks.ip":ip}, {"_id":0, "prefix/masks.ip":1}))
+    ips = data[0]["prefix/masks"]
+    for count in range(len(ips)):
         if ips[count]["ip"] == ip:
             ips[count]["contact"] = contact
             collection.update_one({"prefix/masks.ip":ip}, {"$set": {'prefix/masks': ips}})
@@ -82,5 +83,4 @@ def register_contact(collection, ip, contact):
 client = MongoClient('172.24.0.2', 27017, username='root', password='root')
 collection = client.data.ROOT
 
-document = collection.find_one()
-print(document)
+print(remove_prefix(collection, 888, "364.382.66.8/24"))

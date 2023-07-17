@@ -49,4 +49,4 @@ def proxy(packet):
             
 # tcpdump -i any port 179 -w example.pcap
 while True:
-    sniff(prn=lambda x:x.proxy, count=5, filter="port 179")
+    sniff(prn=lambda x:x.proxy, filter="port 179")

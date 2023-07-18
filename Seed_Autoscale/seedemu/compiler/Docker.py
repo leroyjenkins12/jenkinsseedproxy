@@ -40,6 +40,22 @@ while read -sr expr; do {
 }; done
 [ "$last_pid" != 0 ] && kill $last_pid
 """
+#creates mongodb server
+DockerCompilerFileTemplates['create_mongodb_server'] = """\
+#!/bin/bash
+
+# Check if MongoDB is already running
+if [ -f /var/run/mongodb/mongod.pid ]; then
+  echo "MongoDB is already running."
+  exit 1
+fi
+
+# Create the MongoDB data directory
+mkdir -p /data/db
+
+# Start the MongoDB server
+mongod --dbpath=/data/db
+"""
 #Optionally you can add --database.dbPath /ganache to the ganache command to make database...but not recommended.
 DockerCompilerFileTemplates['ganache'] = """\
 #!/bin/bash
@@ -1079,12 +1095,12 @@ class Docker(Compiler):
         #         special_commands += '''python3 /bgp_smart_contracts/src/account_script.py '{}' '''.format([node.getAsn()])
             
         if node.getName() == "ix100":
-                dockerfile += self._addFile('/ganache.sh', DockerCompilerFileTemplates['ganache'])
-                dockerfile += self._addFile('/pr', DockerCompilerFileTemplates['ganache'])
+                dockerfile += self._addFile('/create_mongodb_server.sh', DockerCompilerFileTemplates['create_mongodb_server'])
+                dockerfile += self._addFile('/pr', DockerCompilerFileTemplates['create_mongodb_server'])
                 # dockerfile += self._addFile('/data_proxy.sh', DockerCompilerFileTemplates['ganache'])
-                start_commands += 'chmod +x /ganache.sh\n'
+                start_commands += 'chmod +x /create_mongodb_server.sh\n'
                 # start_commands += 'chmod +x /data_proxy.sh\n'
-                special_commands += '/ganache.sh\n'
+                special_commands += '/create_mongodb_server.sh\n'
                 # special_commands += '/data_proxy.sh\n'
                 
                 #Appends each topology node to the array to aid auto deployment (of devices in array)

@@ -83,4 +83,4 @@ def register_contact(collection, ip, contact):
 client = MongoClient('172.24.0.2', 27017, username='root', password='root')
 collection = client.data.ROOT
 
-print(remove_prefix(collection, 888, "364.382.66.8/24"))
+print(register_asn(collection, 888))

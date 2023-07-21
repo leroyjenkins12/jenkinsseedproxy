@@ -69,7 +69,15 @@ def proxy(packet):
                             else:
                                 print(f"On layer {counter}: {asn} {ip}")
                                 seen.append(ip)
-                                print(check_exists(asn, ip))
+                                existsResult = check_exists(asn, ip)
+                                if existsResult == True:
+                                    print("NLRI " + str(count) + " passed authorization...checking next ASN")
+                                elif existsResult == False:
+                                    handle_unregistered_advertisement(m_pkt, nlri, validationResult, update)
+                                #elif validationResult == validatePrefixResult.prefixOwnersDoNotMatch:
+                                #    handle_invalid_advertisement(m_pkt, nlri, validationResult, update)
+                                else:
+                                    print("error. should never get here. received back unknown validationResult: " + str(validationResult))   
                     else:
                         # print(f"On layer {counter}: Type code error: {type_code}")
                         pass

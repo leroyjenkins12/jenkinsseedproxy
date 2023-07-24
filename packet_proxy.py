@@ -5,7 +5,7 @@ from pymongo import MongoClient
 
 def check_exists(asn, ip):
     # Create a MongoClient instance
-    client = MongoClient('10.100.0.136', 27017, username='root', password='root')
+    client = MongoClient('10.100.0.136', 27017)
     db = client.data.ROOT
 
     result = list(db.find({'prefix/masks.ip': ip}))

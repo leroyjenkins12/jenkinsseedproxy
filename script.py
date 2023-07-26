@@ -3,6 +3,7 @@ from scapy.contrib.bgp import *
 import mysql.connector
 from mysql.connector import Error
 
+# MySQL reading from PCAP. Not super needed  ao 26 Jul 2023
 
 def check_exists(asn, ip):
     print(f'SELECT EXISTS(SELECT * FROM network WHERE asn={asn} AND ip="{ip}"')

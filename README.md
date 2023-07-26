@@ -1,26 +1,37 @@
 ## Building an image
 ```
+# Run inside Seed_Autoscale folder
 sudo docker image build -t docker/name:tag --no-cache .
-# sudo docker image build -t connorbluestein/bgpchain:v0.3
+# sudo docker image build -t connorbluestein/bgpchain:v0.3 --no-cache .
 
-# copy most recent image id
-docker image ls
-
-docker push {ID}
+docker push connorbluestein/bgpchain:v0.3
 ```
 
 ## Building an environment
 ```
+# In examples folder
 python3 {setup env file}.py
 cd output_{setup env file}
 sudo docker-compose build
 sudo docker compose up
+
+# After ending emulation, make sure to run:
+sudo docker compose down
 ```
+
+## Client
+
+
 ## Docker information
 ### Docker.py
-create_mongodb_server.sh
+Customizes docker container.
+
+create_mongodb_server.sh - script to set up mongo database inside ix100
 
 ### Dockerfile
+- Ubuntu 20.04 base image
+- Pip and apt installs
+- Clones Seed_scalable_complete/bgp_smart_contracts
 
 ## Algorithm
 Algorithm needs to determine trust level of nodes.

@@ -84,4 +84,10 @@ packet_proxy.py sniffs the network for BGP Update packets, strips out asn and pr
 - [x] Strip information
 - [x] Connect to mongoDB
 
+## TODO
+
+- [ ] packet_proxy_tcp_check.py needs to resize TCP loads
+- [ ] points based trust algorithm
+- [ ] curate database and plug into program
+
 

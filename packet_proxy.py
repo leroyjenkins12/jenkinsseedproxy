@@ -5,8 +5,8 @@ from pymongo import MongoClient
 
 def check_exists(asn, ip):
     # Create a MongoClient instance
-    client = MongoClient('10.100.0.136', 27017)
-    db = client.data.ROOT
+    client = MongoClient("mongodb+srv://hokie:letsgo@mongo.i8isc7w.mongodb.net/")
+    db = client.data.proxy
 
     result = list(db.find({'prefix/masks.ip': ip}))
 
@@ -50,7 +50,7 @@ def proxy(packet):
                     #                 print(f"On layer {counter}: {asn} {ip}")
                     #                 seen.append(ip)
                     #             # print(check_exists(asn, ip))
-                    #     else:e66aecc9db2b
+                    #     else:
                     #         print(f"On layer {counter}: Type code error: {type_code}")
 
                     path_entry = path_attributes[1]

@@ -2,6 +2,8 @@ from scapy.all import *
 from scapy.contrib.bgp import *
 from pymongo import MongoClient
 
+#For packet resizing. Most current file to work on ao 26 Jul 2023
+# Functionality uncertain
 
 def check_exists(asn, ip):
     # Create a MongoClient instance

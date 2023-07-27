@@ -1,6 +1,11 @@
 ## Building an image
 ```
+
 # Run inside Seed_Autoscale folder
+#Open development.env and copy the code
+#Paste the code into the terminal (in Seed_Autoscale) and run all follow on commands
+#in the same terminal
+
 sudo docker image build -t docker/name:tag --no-cache .
 # sudo docker image build -t connorbluestein/bgpchain:v0.3 --no-cache .
 

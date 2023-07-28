@@ -15,8 +15,8 @@ RUN pip3 install eth-brownie Flask scapy flask-restful && pip3 install eth-utils
 #RUN pip3 install netifaces
 #RUN apt-get install iptables sudo -y
 #RUN echo "hDessddssdssssssdy"
-RUN git clone --depth 1 --filter=blob:none -b experiment https://github.com/cbluestein/Seed_scalable_complete/
-WORKDIR /Seed_scalable_complete
+RUN git clone --depth 1 --filter=blob:none -b experiment https://github.com/cbluestein/seedproxy/
+WORKDIR /seedproxy
 RUN git sparse-checkout set bgp_smart_contracts && git branch && mv bgp_smart_contracts ../bgp_smart_contracts 
 #RUN git branch
 #RUN mv bgp_smart_contracts ../bgp_smart_contracts

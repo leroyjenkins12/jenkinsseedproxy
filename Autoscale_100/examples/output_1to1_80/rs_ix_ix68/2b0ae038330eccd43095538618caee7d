@@ -1,0 +1,83 @@
+router id 10.68.0.68;
+ipv4 table t_direct;
+protocol device {
+}
+protocol kernel {
+    ipv4 {
+        import all;
+        export all;
+    };
+    learn;
+}
+protocol direct local_nets{
+    ipv4 {
+        table t_direct;
+        import all;
+    };
+interface "ix68";
+}
+define LOCAL_COMM = (68, 0, 0);
+define CUSTOMER_COMM = (68, 1, 0);
+define PEER_COMM = (68, 2, 0);
+define PROVIDER_COMM = (68, 3, 0);
+
+ipv4 table t_bgp;
+
+protocol pipe {
+    table t_bgp;
+    peer table master4;
+    import none;
+    export all;
+}
+protocol pipe {
+    table t_direct;
+    peer table t_bgp;
+    import none;
+    export filter { bgp_large_community.add(LOCAL_COMM); accept; };
+}
+protocol bgp p_as236 {
+    ipv4 {
+    	table t_bgp;
+        import filter {
+            bgp_large_community.add(PROVIDER_COMM);
+            
+            accept;
+        };
+        export all;
+        next hop self;
+    };
+    
+    local 10.68.0.68 as 68;
+    neighbor 10.68.0.236 as 236;
+}
+protocol bgp p_as160 {
+    ipv4 {
+    	table t_bgp;
+        import filter {
+            bgp_large_community.add(PROVIDER_COMM);
+            
+            accept;
+        };
+        export all;
+        next hop self;
+    };
+    
+    local 10.68.0.68 as 68;
+    neighbor 10.68.0.160 as 160;
+}
+protocol bgp p_as161 {
+    ipv4 {
+    	table t_bgp;
+        import filter {
+            bgp_large_community.add(PROVIDER_COMM);
+            
+            accept;
+        };
+        export all;
+        next hop self;
+    };
+    
+    local 10.68.0.68 as 68;
+    neighbor 10.68.0.161 as 161;
+}
+

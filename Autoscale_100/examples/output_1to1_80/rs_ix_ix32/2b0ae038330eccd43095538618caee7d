@@ -1,0 +1,98 @@
+router id 10.32.0.32;
+ipv4 table t_direct;
+protocol device {
+}
+protocol kernel {
+    ipv4 {
+        import all;
+        export all;
+    };
+    learn;
+}
+protocol direct local_nets{
+    ipv4 {
+        table t_direct;
+        import all;
+    };
+interface "ix32";
+}
+define LOCAL_COMM = (32, 0, 0);
+define CUSTOMER_COMM = (32, 1, 0);
+define PEER_COMM = (32, 2, 0);
+define PROVIDER_COMM = (32, 3, 0);
+
+ipv4 table t_bgp;
+
+protocol pipe {
+    table t_bgp;
+    peer table master4;
+    import none;
+    export all;
+}
+protocol pipe {
+    table t_direct;
+    peer table t_bgp;
+    import none;
+    export filter { bgp_large_community.add(LOCAL_COMM); accept; };
+}
+protocol bgp p_as200 {
+    ipv4 {
+    	table t_bgp;
+        import filter {
+            bgp_large_community.add(PROVIDER_COMM);
+            
+            accept;
+        };
+        export all;
+        next hop self;
+    };
+    
+    local 10.32.0.32 as 32;
+    neighbor 10.32.0.200 as 200;
+}
+protocol bgp p_as139 {
+    ipv4 {
+    	table t_bgp;
+        import filter {
+            bgp_large_community.add(PROVIDER_COMM);
+            
+            accept;
+        };
+        export all;
+        next hop self;
+    };
+    
+    local 10.32.0.32 as 32;
+    neighbor 10.32.0.139 as 139;
+}
+protocol bgp p_as140 {
+    ipv4 {
+    	table t_bgp;
+        import filter {
+            bgp_large_community.add(PROVIDER_COMM);
+            
+            accept;
+        };
+        export all;
+        next hop self;
+    };
+    
+    local 10.32.0.32 as 32;
+    neighbor 10.32.0.140 as 140;
+}
+protocol bgp p_as141 {
+    ipv4 {
+    	table t_bgp;
+        import filter {
+            bgp_large_community.add(PROVIDER_COMM);
+            
+            accept;
+        };
+        export all;
+        next hop self;
+    };
+    
+    local 10.32.0.32 as 32;
+    neighbor 10.32.0.141 as 141;
+}
+

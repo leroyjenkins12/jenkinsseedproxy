@@ -1,0 +1,98 @@
+router id 10.38.0.38;
+ipv4 table t_direct;
+protocol device {
+}
+protocol kernel {
+    ipv4 {
+        import all;
+        export all;
+    };
+    learn;
+}
+protocol direct local_nets{
+    ipv4 {
+        table t_direct;
+        import all;
+    };
+interface "ix38";
+}
+define LOCAL_COMM = (38, 0, 0);
+define CUSTOMER_COMM = (38, 1, 0);
+define PEER_COMM = (38, 2, 0);
+define PROVIDER_COMM = (38, 3, 0);
+
+ipv4 table t_bgp;
+
+protocol pipe {
+    table t_bgp;
+    peer table master4;
+    import none;
+    export all;
+}
+protocol pipe {
+    table t_direct;
+    peer table t_bgp;
+    import none;
+    export filter { bgp_large_community.add(LOCAL_COMM); accept; };
+}
+protocol bgp p_as206 {
+    ipv4 {
+    	table t_bgp;
+        import filter {
+            bgp_large_community.add(PROVIDER_COMM);
+            
+            accept;
+        };
+        export all;
+        next hop self;
+    };
+    
+    local 10.38.0.38 as 38;
+    neighbor 10.38.0.206 as 206;
+}
+protocol bgp p_as122 {
+    ipv4 {
+    	table t_bgp;
+        import filter {
+            bgp_large_community.add(PROVIDER_COMM);
+            
+            accept;
+        };
+        export all;
+        next hop self;
+    };
+    
+    local 10.38.0.38 as 38;
+    neighbor 10.38.0.122 as 122;
+}
+protocol bgp p_as123 {
+    ipv4 {
+    	table t_bgp;
+        import filter {
+            bgp_large_community.add(PROVIDER_COMM);
+            
+            accept;
+        };
+        export all;
+        next hop self;
+    };
+    
+    local 10.38.0.38 as 38;
+    neighbor 10.38.0.123 as 123;
+}
+protocol bgp p_as121 {
+    ipv4 {
+    	table t_bgp;
+        import filter {
+            bgp_large_community.add(PROVIDER_COMM);
+            
+            accept;
+        };
+        export all;
+        next hop self;
+    };
+    
+    local 10.38.0.38 as 38;
+    neighbor 10.38.0.121 as 121;
+}
+

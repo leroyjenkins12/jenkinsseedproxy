@@ -1,0 +1,18 @@
+#!/bin/bash
+mkdir -p logs
+ganache -a 256 -p 8545 -h 10.100.0.100 --deterministic > logs/bgp-$(date +%Y-%m-%d-%H:%M:%S) & 
+sleep 5
+cd /bgp_smart_contracts/src 
+mkdir pcaps
+tcpdump -i any -n tcp port 8545 -w pcaps/blockchain-$(date +%Y-%m-%d-%H:%M:%S).pcap -Z root &
+tcpdump -i any -n tcp port 179 -w pcaps/bgp-$(date +%Y-%m-%d-%H:%M:%S).pcap -Z root &
+python3 scripts/iana-contract-setup.py 0
+# python3 compile.py IANA
+# sleep 2 
+# python3 deploy.py ACCOUNT0 IANA
+# sleep 2
+#python3 account_script.py 
+echo 'Ganache setup ran. Check Logs for details.'
+cd ..
+cd ..
+

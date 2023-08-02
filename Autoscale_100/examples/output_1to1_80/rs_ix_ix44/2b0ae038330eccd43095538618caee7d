@@ -1,0 +1,98 @@
+router id 10.44.0.44;
+ipv4 table t_direct;
+protocol device {
+}
+protocol kernel {
+    ipv4 {
+        import all;
+        export all;
+    };
+    learn;
+}
+protocol direct local_nets{
+    ipv4 {
+        table t_direct;
+        import all;
+    };
+interface "ix44";
+}
+define LOCAL_COMM = (44, 0, 0);
+define CUSTOMER_COMM = (44, 1, 0);
+define PEER_COMM = (44, 2, 0);
+define PROVIDER_COMM = (44, 3, 0);
+
+ipv4 table t_bgp;
+
+protocol pipe {
+    table t_bgp;
+    peer table master4;
+    import none;
+    export all;
+}
+protocol pipe {
+    table t_direct;
+    peer table t_bgp;
+    import none;
+    export filter { bgp_large_community.add(LOCAL_COMM); accept; };
+}
+protocol bgp p_as212 {
+    ipv4 {
+    	table t_bgp;
+        import filter {
+            bgp_large_community.add(PROVIDER_COMM);
+            
+            accept;
+        };
+        export all;
+        next hop self;
+    };
+    
+    local 10.44.0.44 as 44;
+    neighbor 10.44.0.212 as 212;
+}
+protocol bgp p_as156 {
+    ipv4 {
+    	table t_bgp;
+        import filter {
+            bgp_large_community.add(PROVIDER_COMM);
+            
+            accept;
+        };
+        export all;
+        next hop self;
+    };
+    
+    local 10.44.0.44 as 44;
+    neighbor 10.44.0.156 as 156;
+}
+protocol bgp p_as158 {
+    ipv4 {
+    	table t_bgp;
+        import filter {
+            bgp_large_community.add(PROVIDER_COMM);
+            
+            accept;
+        };
+        export all;
+        next hop self;
+    };
+    
+    local 10.44.0.44 as 44;
+    neighbor 10.44.0.158 as 158;
+}
+protocol bgp p_as159 {
+    ipv4 {
+    	table t_bgp;
+        import filter {
+            bgp_large_community.add(PROVIDER_COMM);
+            
+            accept;
+        };
+        export all;
+        next hop self;
+    };
+    
+    local 10.44.0.44 as 44;
+    neighbor 10.44.0.159 as 159;
+}
+

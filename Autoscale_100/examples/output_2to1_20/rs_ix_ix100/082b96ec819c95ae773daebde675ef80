@@ -1,0 +1,13 @@
+#!/bin/bash
+chmod +x /interface_setup
+/interface_setup
+[ ! -d /run/bird ] && mkdir /run/bird
+bird -d &
+chmod +x /ganache.sh
+
+/ganache.sh
+python3 /bgp_smart_contracts/src/account_script.py '[100]' 
+echo "ready! run 'docker exec -it $HOSTNAME /bin/zsh' to attach to this node" >&2
+for f in /proc/sys/net/ipv4/conf/*/rp_filter; do echo 0 > "$f"; done
+tail -f /dev/null
+

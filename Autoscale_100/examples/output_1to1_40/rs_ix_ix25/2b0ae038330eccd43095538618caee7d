@@ -1,0 +1,98 @@
+router id 10.25.0.25;
+ipv4 table t_direct;
+protocol device {
+}
+protocol kernel {
+    ipv4 {
+        import all;
+        export all;
+    };
+    learn;
+}
+protocol direct local_nets{
+    ipv4 {
+        table t_direct;
+        import all;
+    };
+interface "ix25";
+}
+define LOCAL_COMM = (25, 0, 0);
+define CUSTOMER_COMM = (25, 1, 0);
+define PEER_COMM = (25, 2, 0);
+define PROVIDER_COMM = (25, 3, 0);
+
+ipv4 table t_bgp;
+
+protocol pipe {
+    table t_bgp;
+    peer table master4;
+    import none;
+    export all;
+}
+protocol pipe {
+    table t_direct;
+    peer table t_bgp;
+    import none;
+    export filter { bgp_large_community.add(LOCAL_COMM); accept; };
+}
+protocol bgp p_as193 {
+    ipv4 {
+    	table t_bgp;
+        import filter {
+            bgp_large_community.add(PROVIDER_COMM);
+            
+            accept;
+        };
+        export all;
+        next hop self;
+    };
+    
+    local 10.25.0.25 as 25;
+    neighbor 10.25.0.193 as 193;
+}
+protocol bgp p_as108 {
+    ipv4 {
+    	table t_bgp;
+        import filter {
+            bgp_large_community.add(PROVIDER_COMM);
+            
+            accept;
+        };
+        export all;
+        next hop self;
+    };
+    
+    local 10.25.0.25 as 25;
+    neighbor 10.25.0.108 as 108;
+}
+protocol bgp p_as109 {
+    ipv4 {
+    	table t_bgp;
+        import filter {
+            bgp_large_community.add(PROVIDER_COMM);
+            
+            accept;
+        };
+        export all;
+        next hop self;
+    };
+    
+    local 10.25.0.25 as 25;
+    neighbor 10.25.0.109 as 109;
+}
+protocol bgp p_as110 {
+    ipv4 {
+    	table t_bgp;
+        import filter {
+            bgp_large_community.add(PROVIDER_COMM);
+            
+            accept;
+        };
+        export all;
+        next hop self;
+    };
+    
+    local 10.25.0.25 as 25;
+    neighbor 10.25.0.110 as 110;
+}
+

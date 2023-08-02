@@ -1,0 +1,83 @@
+router id 10.39.0.39;
+ipv4 table t_direct;
+protocol device {
+}
+protocol kernel {
+    ipv4 {
+        import all;
+        export all;
+    };
+    learn;
+}
+protocol direct local_nets{
+    ipv4 {
+        table t_direct;
+        import all;
+    };
+interface "ix39";
+}
+define LOCAL_COMM = (39, 0, 0);
+define CUSTOMER_COMM = (39, 1, 0);
+define PEER_COMM = (39, 2, 0);
+define PROVIDER_COMM = (39, 3, 0);
+
+ipv4 table t_bgp;
+
+protocol pipe {
+    table t_bgp;
+    peer table master4;
+    import none;
+    export all;
+}
+protocol pipe {
+    table t_direct;
+    peer table t_bgp;
+    import none;
+    export filter { bgp_large_community.add(LOCAL_COMM); accept; };
+}
+protocol bgp p_as207 {
+    ipv4 {
+    	table t_bgp;
+        import filter {
+            bgp_large_community.add(PROVIDER_COMM);
+            
+            accept;
+        };
+        export all;
+        next hop self;
+    };
+    
+    local 10.39.0.39 as 39;
+    neighbor 10.39.0.207 as 207;
+}
+protocol bgp p_as107 {
+    ipv4 {
+    	table t_bgp;
+        import filter {
+            bgp_large_community.add(PROVIDER_COMM);
+            
+            accept;
+        };
+        export all;
+        next hop self;
+    };
+    
+    local 10.39.0.39 as 39;
+    neighbor 10.39.0.107 as 107;
+}
+protocol bgp p_as108 {
+    ipv4 {
+    	table t_bgp;
+        import filter {
+            bgp_large_community.add(PROVIDER_COMM);
+            
+            accept;
+        };
+        export all;
+        next hop self;
+    };
+    
+    local 10.39.0.39 as 39;
+    neighbor 10.39.0.108 as 108;
+}
+

@@ -10,7 +10,7 @@ from ipaddress import IPv4Network, IPv4Address
 from shutil import copyfile
 import re
 
-SEEDEMU_CLIENT_IMAGE='karlolson1/bgpchain:v.01'
+SEEDEMU_CLIENT_IMAGE='karlolson1/mongo:2'
 ETH_SEEDEMU_CLIENT_IMAGE='rawisader/seedemu-eth-client'
 
 DockerCompilerFileTemplates: Dict[str, str] = {}
@@ -18,6 +18,20 @@ DockerCompilerFileTemplates: Dict[str, str] = {}
 DockerCompilerFileTemplates['dockerfile'] = """\
 ARG DEBIAN_FRONTEND=noninteractive
 RUN echo 'exec zsh' > /root/.bashrc
+"""
+#Tentative attempt for building out automation to db
+DockerCompilerFileTemplates['db_host_automater'] = """\
+#! /bin/bash
+mkdir -p data/db
+
+mongod --quiet --bind_ip 10.2.0.118
+"""
+
+DockerCompilerFileTemplates['db_import_automater'] = """\
+#! /bin/bash
+sleep 5
+mongoimport --host=10.2.0.118--db='bgp_db' --collection='known_bgp' --file=/../../testingMongo.json
+
 """
 
 DockerCompilerFileTemplates['start_script'] = """\
@@ -498,7 +512,7 @@ class DockerImage(object):
 
 DefaultImages: List[DockerImage] = []
 
-DefaultImages.append(DockerImage('karlolson1/bgpchain:v.01', []))
+DefaultImages.append(DockerImage('karlolson1/mongo:2', []))
 
 network_devices=[]
 
@@ -727,7 +741,7 @@ class Docker(Compiler):
 
         if self.__disable_images:
             self._log('disable-imaged configured, using base image.')
-            (image, _) = self.__images['karlolson1/bgpchain:v.01']
+            (image, _) = self.__images['karlolson1/mongo:2']
             return (image, nodeSoft - image.getSoftware())
 
         if self.__forced_image != None:
@@ -1069,7 +1083,6 @@ class Docker(Compiler):
             dockerfile += self._addFile('/ganache.sh', DockerCompilerFileTemplates['ganache'])
             dockerfile += self._addFile('/proxy.sh', DockerCompilerFileTemplates['proxy'])
 	
-	
         for (cmd, fork) in node.getStartCommands():
             start_commands += '{}{}\n'.format(cmd, ' &' if fork else '')
 
@@ -1077,8 +1090,20 @@ class Docker(Compiler):
         #     if 100 not in network_devices:
         #         network_devices.append(node.getAsn())
         #     else:
+
+
+        #Add the file using the dockerfile +=
         #         special_commands += '''python3 /bgp_smart_contracts/src/account_script.py '{}' '''.format([node.getAsn()])
-            
+        if node.getName() == "rw":
+                dockerfile += self._addFile('db_host_automater.sh', DockerCompilerFileTemplates['db_host_automater'])
+                start_commands += 'chmod +x /db_host_automater.sh\n'
+                special_commands += '/db_host_automater.sh\n'
+
+        if node.getName() == "host_0":
+                dockerfile += self._addFile('db_import_automater.sh', DockerCompilerFileTemplates['db_import_automater'])
+                start_commands += 'chmod +x /db_import_automater.sh\n'
+                special_commands += '/db_import_automater.sh\n'
+
         if node.getName() == "ix100":
                 dockerfile += self._addFile('/ganache.sh', DockerCompilerFileTemplates['ganache'])
                 start_commands += 'chmod +x /ganache.sh\n'

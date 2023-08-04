@@ -1,0 +1,17 @@
+{
+    "entry1": "value1",
+    "entry2": "value2",
+    "entry3": 3,
+    "entry4": true,
+    "entry5": {
+      "sub_entry1": "sub_value1",
+      "sub_entry2": "sub_value2"
+    },
+    "entry6": ["item1", "item2", "item3"],
+    "entry7": null,
+    "entry8": {
+      "nested_entry1": "nested_value1",
+      "nested_entry2": "nested_value2"
+    }
+  }
+  

@@ -30,7 +30,7 @@ mongod --quiet --bind_ip 10.2.0.118
 DockerCompilerFileTemplates['db_import_automater'] = """\
 #! /bin/bash
 sleep 5
-mongoimport --host=10.2.0.118--db='bgp_db' --collection='known_bgp' --file=/../../testingMongo.json
+mongoimport --host=10.2.0.118 --db='bgp_db' --collection='known_bgp' --file=seedproxydbimports/testingMongo.json
 
 """
 
@@ -1099,8 +1099,9 @@ class Docker(Compiler):
                 start_commands += 'chmod +x /db_host_automater.sh\n'
                 special_commands += '/db_host_automater.sh\n'
 
-        if node.getName() == "host_0":
+        if node.getName() == "router0":
                 dockerfile += self._addFile('db_import_automater.sh', DockerCompilerFileTemplates['db_import_automater'])
+                dockerfile += self._addFile('testingMongo.json','../../testingMongo.json')
                 start_commands += 'chmod +x /db_import_automater.sh\n'
                 special_commands += '/db_import_automater.sh\n'
 

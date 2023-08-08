@@ -9,7 +9,7 @@ from re import sub
 from ipaddress import IPv4Network, IPv4Address
 from shutil import copyfile
 import re
-from Autoscale_100 import testingPython
+# from Autoscale_100 import testingPython
 
 SEEDEMU_CLIENT_IMAGE='karlolson1/mongo:3'
 ETH_SEEDEMU_CLIENT_IMAGE='rawisader/seedemu-eth-client'

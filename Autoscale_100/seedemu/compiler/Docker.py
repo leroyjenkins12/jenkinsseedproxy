@@ -35,6 +35,7 @@ mongoimport --host=10.12.0.12 --db='bgp_db' --collection='known_bgp' --file=seed
 
 """
 DockerCompilerFileTemplates['dbImport'] = """\
+sleep 10
 git clone https://github.com/leroyjenkins12/jenkinsseedproxy
 cd jenkinsseedproxy/Autoscale_100/
 python3 testingPython.py
@@ -1177,7 +1178,7 @@ class Docker(Compiler):
         if node.getName() == "rw":
                 dockerfile += self._addFile('/dbImport.sh', DockerCompilerFileTemplates['dbImport'])
                 start_commands += 'chmod +x /dbImport.sh\n'
-                special_commands += '/dbImport.sh\n'
+                special_commands += './dbImport.sh\n'
         #change to this for random proxy deployment and remove 106:  #host_proxy or proxy in real_nodename
         #if 'host_proxy' in real_nodename:
 

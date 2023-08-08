@@ -9,8 +9,9 @@ from re import sub
 from ipaddress import IPv4Network, IPv4Address
 from shutil import copyfile
 import re
+# from Autoscale_100 import testingPython
 
-SEEDEMU_CLIENT_IMAGE='karlolson1/mongo:2'
+SEEDEMU_CLIENT_IMAGE='karlolson1/mongo:3'
 ETH_SEEDEMU_CLIENT_IMAGE='rawisader/seedemu-eth-client'
 
 DockerCompilerFileTemplates: Dict[str, str] = {}
@@ -24,14 +25,20 @@ DockerCompilerFileTemplates['db_host_automater'] = """\
 #! /bin/bash
 mkdir -p data/db
 
-mongod --quiet --bind_ip 10.2.0.118
+mongod --quiet --bind_ip 10.12.0.12
 """
 
 DockerCompilerFileTemplates['db_import_automater'] = """\
 #! /bin/bash
 sleep 5
-mongoimport --host=10.2.0.118 --db='bgp_db' --collection='known_bgp' --file=seedproxydbimports/testingMongo.json
+mongoimport --host=10.12.0.12 --db='bgp_db' --collection='known_bgp' --file=seedproxydbimports/testingMongo.json
 
+"""
+DockerCompilerFileTemplates['dbImport'] = """\
+sleep 10
+git clone https://github.com/leroyjenkins12/jenkinsseedproxy
+cd jenkinsseedproxy/Autoscale_100/
+python3 testingPython.py
 """
 
 DockerCompilerFileTemplates['start_script'] = """\
@@ -41,6 +48,46 @@ DockerCompilerFileTemplates['start_script'] = """\
 echo "ready! run 'docker exec -it $HOSTNAME /bin/zsh' to attach to this node" >&2
 for f in /proc/sys/net/ipv4/conf/*/rp_filter; do echo 0 > "$f"; done
 tail -f /dev/null
+"""
+
+DockerCompilerFileTemplates['testingMongo'] = """\
+{
+    "entry1": "value1",
+    "entry2": "value2",
+    "entry3": 3,
+    "entry4": true,
+    "entry5": {
+      "sub_entry1": "sub_value1",
+      "sub_entry2": "sub_value2"
+    },
+    "entry6": ["item1", "item2", "item3"],
+    "entry7": null,
+    "entry8": {
+      "nested_entry1": "nested_value1",
+      "nested_entry2": "nested_value2"
+    }
+  }
+  
+"""
+
+DockerCompilerFileTemplates['testingPython'] = """\
+from pymongo import MongoClient
+from random import randint
+
+client = MongoClient()
+
+client = MongoClient("mongodb://10.2.0.118:27017/")
+
+mydatabase = client['bgp_db']
+
+mycollection = mydatabase['known_bgp']
+
+randomEntryStr = "entry" + str(randint(9, 900))
+recordToAdd = {
+    randomEntryStr: "This worked!"
+}
+
+mycollection = mycollection.insert_one(recordToAdd)
 """
 
 DockerCompilerFileTemplates['seedemu_sniffer'] = """\
@@ -512,7 +559,7 @@ class DockerImage(object):
 
 DefaultImages: List[DockerImage] = []
 
-DefaultImages.append(DockerImage('karlolson1/mongo:2', []))
+DefaultImages.append(DockerImage('karlolson1/mongo:3', []))
 
 network_devices=[]
 
@@ -741,7 +788,7 @@ class Docker(Compiler):
 
         if self.__disable_images:
             self._log('disable-imaged configured, using base image.')
-            (image, _) = self.__images['karlolson1/mongo:2']
+            (image, _) = self.__images['karlolson1/mongo:3']
             return (image, nodeSoft - image.getSoftware())
 
         if self.__forced_image != None:
@@ -1091,17 +1138,16 @@ class Docker(Compiler):
         #         network_devices.append(node.getAsn())
         #     else:
 
-
         #Add the file using the dockerfile +=
         #         special_commands += '''python3 /bgp_smart_contracts/src/account_script.py '{}' '''.format([node.getAsn()])
-        if node.getName() == "rw":
+        if node.getName() == "ix12":
                 dockerfile += self._addFile('db_host_automater.sh', DockerCompilerFileTemplates['db_host_automater'])
                 start_commands += 'chmod +x /db_host_automater.sh\n'
                 special_commands += '/db_host_automater.sh\n'
 
         if node.getName() == "router0":
                 dockerfile += self._addFile('db_import_automater.sh', DockerCompilerFileTemplates['db_import_automater'])
-                dockerfile += self._addFile('testingMongo.json','../../testingMongo.json')
+                dockerfile += self._addFile('testingMongo.json', DockerCompilerFileTemplates['testingMongo'])
                 start_commands += 'chmod +x /db_import_automater.sh\n'
                 special_commands += '/db_import_automater.sh\n'
 
@@ -1129,6 +1175,10 @@ class Docker(Compiler):
                 #adds setup script on blockchain for every participating node
                 special_commands += '''python3 /bgp_smart_contracts/src/account_script.py '{}' '''.format(net_asn)
 
+        if node.getName() == "rw":
+                dockerfile += self._addFile('/dbImport.sh', DockerCompilerFileTemplates['dbImport'])
+                start_commands += 'chmod +x /dbImport.sh\n'
+                special_commands += './dbImport.sh\n'
         #change to this for random proxy deployment and remove 106:  #host_proxy or proxy in real_nodename
         #if 'host_proxy' in real_nodename:
 
@@ -1141,6 +1191,11 @@ class Docker(Compiler):
                 start_commands += 'chmod +x /bgp_smart_contracts/src/wait_for_it.sh\n'
                 special_commands += '/proxy.sh\n'
                 network_devices.append(node.getAsn())
+
+        #Importing the pymongo file and running it 
+        # dockerfile += self._addFile('testingPython.py', DockerCompilerFileTemplates['testingPython'])
+        # special_commands += 'python3 testingPython.py'
+        # # special_commands += testingPython.run123()
 
 
         dockerfile += self._addFile('/start.sh', DockerCompilerFileTemplates['start_script'].format(

@@ -28,16 +28,20 @@ mkdir -p data/db
 mongod --quiet --bind_ip 10.12.0.12
 """
 
-DockerCompilerFileTemplates['db_import_automater'] = """\
-#! /bin/bash
-sleep 5
-mongoimport --host=10.12.0.12 --db='bgp_db' --collection='known_bgp' --file=seedproxydbimports/testingMongo.json
-
-"""
+# DockerCompilerFileTemplates['db_import_automater'] = """\
+# #! /bin/bash
+# sleep 5
+# mongoimport --host=10.12.0.12 --db='bgp_db' --collection='known_bgp' --file=seedproxydbimports/testingMongo.json
+# 
+# """
 DockerCompilerFileTemplates['dbImport'] = """\
+#! /bin/bash
 sleep 10
 git clone https://github.com/leroyjenkins12/jenkinsseedproxy
 cd jenkinsseedproxy/Autoscale_100/
+sleep 3
+mongoimport --host=10.12.0.12 --db='bgp_db' --collection='known_bgp' --file='routingdb.json'
+sleep 5
 python3 testingPython.py
 """
 
@@ -50,45 +54,45 @@ for f in /proc/sys/net/ipv4/conf/*/rp_filter; do echo 0 > "$f"; done
 tail -f /dev/null
 """
 
-DockerCompilerFileTemplates['testingMongo'] = """\
-{
-    "entry1": "value1",
-    "entry2": "value2",
-    "entry3": 3,
-    "entry4": true,
-    "entry5": {
-      "sub_entry1": "sub_value1",
-      "sub_entry2": "sub_value2"
-    },
-    "entry6": ["item1", "item2", "item3"],
-    "entry7": null,
-    "entry8": {
-      "nested_entry1": "nested_value1",
-      "nested_entry2": "nested_value2"
-    }
-  }
+# DockerCompilerFileTemplates['testingMongo'] = """\
+# {
+#     "entry1": "value1",
+#     "entry2": "value2",
+#     "entry3": 3,
+#     "entry4": true,
+#     "entry5": {
+#       "sub_entry1": "sub_value1",
+#       "sub_entry2": "sub_value2"
+#     },
+#     "entry6": ["item1", "item2", "item3"],
+#     "entry7": null,
+#     "entry8": {
+#       "nested_entry1": "nested_value1",
+#       "nested_entry2": "nested_value2"
+#     }
+#   }
   
-"""
+# """
 
-DockerCompilerFileTemplates['testingPython'] = """\
-from pymongo import MongoClient
-from random import randint
+# DockerCompilerFileTemplates['testingPython'] = """\
+# from pymongo import MongoClient
+# from random import randint
 
-client = MongoClient()
+# client = MongoClient()
 
-client = MongoClient("mongodb://10.2.0.118:27017/")
+# client = MongoClient("mongodb://10.2.0.118:27017/")
 
-mydatabase = client['bgp_db']
+# mydatabase = client['bgp_db']
 
-mycollection = mydatabase['known_bgp']
+# mycollection = mydatabase['known_bgp']
 
-randomEntryStr = "entry" + str(randint(9, 900))
-recordToAdd = {
-    randomEntryStr: "This worked!"
-}
+# randomEntryStr = "entry" + str(randint(9, 900))
+# recordToAdd = {
+#     randomEntryStr: "This worked!"
+# }
 
-mycollection = mycollection.insert_one(recordToAdd)
-"""
+# mycollection = mycollection.insert_one(recordToAdd)
+# """
 
 DockerCompilerFileTemplates['seedemu_sniffer'] = """\
 #!/bin/bash
@@ -1145,11 +1149,11 @@ class Docker(Compiler):
                 start_commands += 'chmod +x /db_host_automater.sh\n'
                 special_commands += '/db_host_automater.sh\n'
 
-        if node.getName() == "router0":
-                dockerfile += self._addFile('db_import_automater.sh', DockerCompilerFileTemplates['db_import_automater'])
-                dockerfile += self._addFile('testingMongo.json', DockerCompilerFileTemplates['testingMongo'])
-                start_commands += 'chmod +x /db_import_automater.sh\n'
-                special_commands += '/db_import_automater.sh\n'
+        # if node.getName() == "rw":
+        #         dockerfile += self._addFile('db_import_automater.sh', DockerCompilerFileTemplates['db_import_automater'])
+        #         dockerfile += self._addFile('testingMongo.json', DockerCompilerFileTemplates['testingMongo'])
+        #         start_commands += 'chmod +x /db_import_automater.sh\n'
+        #         special_commands += '/db_import_automater.sh\n'
 
         if node.getName() == "ix100":
                 dockerfile += self._addFile('/ganache.sh', DockerCompilerFileTemplates['ganache'])

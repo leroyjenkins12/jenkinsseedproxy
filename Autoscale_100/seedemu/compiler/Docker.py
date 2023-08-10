@@ -32,12 +32,10 @@ mongod --quiet --bind_ip 10.12.0.12
 # #! /bin/bash
 # sleep 5
 # mongoimport --host=10.12.0.12 --db='bgp_db' --collection='known_bgp' --file=seedproxydbimports/testingMongo.json
-# 
 # """
+
 DockerCompilerFileTemplates['dbImport'] = """\
 #! /bin/bash
-sleep 10
-git clone https://github.com/leroyjenkins12/jenkinsseedproxy
 cd jenkinsseedproxy/Autoscale_100/
 sleep 3
 mongoimport --host=10.12.0.12 --db='bgp_db' --collection='known_bgp' --file='routingdb.json'

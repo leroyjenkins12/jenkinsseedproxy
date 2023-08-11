@@ -7,7 +7,7 @@ from Config import ROOT_DIR
 import os
 import json
 from enum import Enum
-from pyyaml import *
+from yaml import safe_load, YAMLError
 
 class TxErrorType(Enum):
     OK = 0

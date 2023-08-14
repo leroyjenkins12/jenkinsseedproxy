@@ -158,6 +158,8 @@ Downloads/jenkinsseedproxy/Autoscale_100/examples/output_1to1_20$ sudo docker co
 Downloads/jenkinsseedproxy/Autoscale_100/examples/output_1to1_20$ sudo docker compose up
 #will create networks, containers, then white block of text, then white and colorful text representing the networks, routers, and hosts connecting to each other
 #successful if no repeating errors, then there will stop like process is running
+#2LT Jenkins has automated MongoDb to start on IX12/host and import routingdb.json
+#This means the database can be queried by any device able to rout traffic to IX12
 
 ```
 

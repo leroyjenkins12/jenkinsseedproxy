@@ -20,9 +20,10 @@
 - What does successful test look like?
 - Building an image
 - Building client environment
-- Buiilding an environment
+- Building an environment
 - Common Errors and Fixes
 - Docker information
+- Database
 - Algorithm (to be finished)
 - Administration (at the moment, not in use)
 - Proxy
@@ -185,6 +186,12 @@ IMPORTANT: Changes to Docker.py require rebuild of just environment
 - Ensures containers (routers, hosts, networks) have correct software and image
 
 IMPORTANT: Changes to Dockerfile require rebuild of BOTH image and environment
+
+## Database
+- JSON Format
+    - Learn JSON so it isn't messed up and is possible to query
+- Need ASN, IP, and any other relevant info
+- Automatically due to shell script is put into IX12 to serve as db for the proxy
 
 ## Algorithm (to be finished)
 Algorithm needs to determine trust level of nodes.

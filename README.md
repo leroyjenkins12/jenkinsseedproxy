@@ -11,9 +11,9 @@
 
 ### Work Credits
 - Based on thesis and GitHub from LTC Karl Olson, US Army, Army Cyber Institute
-- Connor Bluestein and John Byman of Virginia Polytechnical Institute
-- Brendan Coyne of Norwich University
-- 2LT Nathaniel Jenkins, US Army, USMA '23
+- Connor Bluestein and John Byman of Virginia Polytechnical Institute, 1st Cohort ACI Interns 2023
+- Brendan Coyne of Norwich University, 3rd Cohort ACI Intern 2023
+- 2LT Nathaniel Jenkins, US Army, USMA '23, 3.5th Cohort ACI Intern 2023
 
 
 ## Index
@@ -26,49 +26,6 @@
 - Algorithm (to be finished)
 - Administration (at the moment, not in use)
 - Proxy
-
-## What does successful test look like? 
-### The $ represents command line entry, anything before is the working directory
-### 2LT Jenkins wrote shell script to do the Terminal 2 START TEST commands
-#### _Test Start_
-#### Terminal 1 START TEST
-```
-$ cd Downloads/jenkinsseedproxy/Autoscale_100
-Downloads/jenkinsseedproxy/Autoscale_100$ cat development.env
-Downloads/jenkinsseedproxy/Autoscale_100$ export PYTHONPATH="`pwd`:$PYTHONPATH"
-Downloads/jenkinsseedproxy/Autoscale_100$ cd client
-Downloads/jenkinsseedproxy/Autoscale_100/client$ sudo docker compose build
-#will scroll through blue commands then prompt will return
-Downloads/jenkinsseedproxy/Autoscale_100/client$ sudo docker compose up
-#should say "running (2/2)" then have next line of "Attaching to seedemu_client"
-#successful if prompt does not return and you have running process
-```
-#### Terminal 2 START TEST
-```
-$ cd Downloads/jenkinsseedproxy/Autoscale_100
-Downloads/jenkinsseedproxy/Autoscale_100$ cat development.env
-Downloads/jenkinsseedproxy/Autoscale_100$ export PYTHONPATH="`pwd`:$PYTHONPATH"
-Downloads/jenkinsseedproxy/Autoscale_100$ cd examples
-Downloads/jenkinsseedproxy/Autoscale_100/examples$ python3 1to1_20.py -d 50
-#scrolls through blue commands, last line will have "image" & "karlolson1/mongo:3"
-Downloads/jenkinsseedproxy/Autoscale_100/examples$ cd output_1to1_20/
-Downloads/jenkinsseedproxy/Autoscale_100/examples/output_1to1_20$ sudo docker compose build
-#scrolls through white and blue commands
-#final entry will look like white: "[+] Building 90.1s (16/16) FINISHED"
-#then blue commands, prompt returns
-Downloads/jenkinsseedproxy/Autoscale_100/examples/output_1to1_20$ sudo docker compose up
-#will create networks, containers, then white block of text, then colorful connecting text
-#successful if no repeating errors, then there will stop like process is running
-
-```
-
-#### Terminal 2 FINISH TEST
-```
-#Press Ctrl+C multiple times
-Downloads/jenkinsseedproxy/Autoscale_100/examples/output_1to1_20$ sudo docker compose down
-#will remove networks and containers
-```
-#### _Test Finished_
 
 ## Common Errors and Fixes
 
@@ -168,6 +125,49 @@ sudo docker compose up
 sudo docker compose down
 # Failure to do so will DEFINITELY cause errors
 ```
+
+## What does successful test look like? 
+### The $ represents command line entry, anything before is the working directory
+### 2LT Jenkins wrote shell script to do the Terminal 2 START TEST commands
+#### _Test Start_
+#### Terminal 1 START TEST
+```
+$ cd Downloads/jenkinsseedproxy/Autoscale_100
+Downloads/jenkinsseedproxy/Autoscale_100$ cat development.env
+Downloads/jenkinsseedproxy/Autoscale_100$ export PYTHONPATH="`pwd`:$PYTHONPATH"
+Downloads/jenkinsseedproxy/Autoscale_100$ cd client
+Downloads/jenkinsseedproxy/Autoscale_100/client$ sudo docker compose build
+#will scroll through blue commands then prompt will return
+Downloads/jenkinsseedproxy/Autoscale_100/client$ sudo docker compose up
+#should say "running (2/2)" then have next line of "Attaching to seedemu_client"
+#successful if prompt does not return and you have running process
+```
+#### Terminal 2 START TEST
+```
+$ cd Downloads/jenkinsseedproxy/Autoscale_100
+Downloads/jenkinsseedproxy/Autoscale_100$ cat development.env
+Downloads/jenkinsseedproxy/Autoscale_100$ export PYTHONPATH="`pwd`:$PYTHONPATH"
+Downloads/jenkinsseedproxy/Autoscale_100$ cd examples
+Downloads/jenkinsseedproxy/Autoscale_100/examples$ python3 1to1_20.py -d 50
+#scrolls through blue commands, last line will have "image" & "karlolson1/mongo:3"
+Downloads/jenkinsseedproxy/Autoscale_100/examples$ cd output_1to1_20/
+Downloads/jenkinsseedproxy/Autoscale_100/examples/output_1to1_20$ sudo docker compose build
+#scrolls through white and blue commands
+#final entry will look like white: "[+] Building 90.1s (16/16) FINISHED"
+#then blue commands, prompt returns
+Downloads/jenkinsseedproxy/Autoscale_100/examples/output_1to1_20$ sudo docker compose up
+#will create networks, containers, then white block of text, then white and colorful text representing the networks, routers, and hosts connecting to each other
+#successful if no repeating errors, then there will stop like process is running
+
+```
+
+#### Terminal 2 FINISH TEST
+```
+#Press Ctrl+C multiple times
+Downloads/jenkinsseedproxy/Autoscale_100/examples/output_1to1_20$ sudo docker compose down
+#will remove networks and containers
+```
+#### _Test Finished_
 
 ## Docker information
 ### Docker.py

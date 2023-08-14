@@ -9,13 +9,13 @@ RUN sed -i 's/use_2_bytes_asn = True/use_2_bytes_asn = False/g' /usr/local/lib/p
 #RUN npm update -g && npm install -g ganache@7.5.0 && npm install -g npm@8.5.3
 #RUN pip3 install --upgrade pip
 #RUN pip3 install eth-brownie Flask scapy flask-restful && pip3 install eth-utils netfilterqueue netifaces
-RUN pip3 install scapy && pip3 install netfilterqueue netifaces && pip3 install pymongo && pip3 install myyaml
+RUN pip3 install scapy && pip3 install netfilterqueue netifaces && pip3 install pymongo && pip3 install pyyaml && pip3 install psutil
 RUN curl -fsSL https://pgp.mongodb.com/server-6.0.asc | sudo gpg -o /usr/share/keyrings/mongodb-server-6.0.gpg --dearmor 
 RUN echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-6.0.gpg ] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/6.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-6.0.list
 RUN sudo apt-get update
 RUN sudo apt-get install -y mongodb-org
 RUN mkdir -p data/db
-RUN git clone --depth 1 --filter=blob:none -b https://github.com/leroyjenkins12/jenkinsseedproxy
-WORKDIR /jenkinsseedproxy
-RUN git sparse-checkout set bgp_smart_contracts && git branch && mv bgp_smart_contracts ../bgp_smart_contracts 
+RUN git clone --depth 1 https://github.com/leroyjenkins12/jenkinsseedproxy 
+WORKDIR /jenkinsseedproxy/Autoscale_100
+RUN mv bgp_smart_contracts ../../bgp_smart_contracts 
 WORKDIR / 

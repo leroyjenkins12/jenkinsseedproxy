@@ -26,7 +26,7 @@ global_index = None
 connections = None
 
 load_contrib('bgp') #scapy does not automatically load items from Contrib. Must call function and module name to load.
-
+print("Test\n\n\n\n\n\n\n\n\n")
 #####Synchronizes ASN with blockchain account data##################
 # tx_sender_name = "ACCOUNT"+str(sys.argv[1]) #must add an asn # after account, eg. ACCOUNT151 we do this programmatically later in program
 # tx_sender = Account(AccountType.TransactionSender, tx_sender_name)
@@ -49,6 +49,7 @@ def get_datetime():
 old_print = print
 
 def pkt_in(packet):
+    print("Test2\n\n\n\n\n\n\n\n\n")
     local_index = global_index.incr_index()
     def ts_print(*args, **kwargs):
         old_print(str(datetime.datetime.now()) + "--" + str(local_index), *args, **kwargs)
@@ -96,6 +97,7 @@ def pkt_in(packet):
                             if validationResult == validatePrefixResult.prefixValid:
                                 print("NLRI " + str(count) + " passed authorization...checking next ASN")
                             elif validationResult == validatePrefixResult.prefixNotRegistered:
+                                print("Unregistered BGP \n\n\n\n\n\n\n\n")
                                 handle_unregistered_advertisement(m_pkt, nlri, validationResult, update)
                             elif validationResult == validatePrefixResult.prefixOwnersDoNotMatch:
                                 handle_invalid_advertisement(m_pkt, nlri, validationResult, update)

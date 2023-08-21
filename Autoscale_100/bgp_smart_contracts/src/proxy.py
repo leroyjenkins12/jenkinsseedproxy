@@ -19,6 +19,8 @@ from ipaddress import IPv4Address
 import os, sys
 import datetime
 import subprocess
+from pymongo import MongoClient
+
 
 ACCEPT_UNREGISTERED_ADVERTISEMENTS = True # set to False to remove all advertisements that are not registered
 
@@ -54,7 +56,11 @@ def pkt_in(packet):
         old_print(str(datetime.datetime.now()) + "--" + str(local_index), *args, **kwargs)
 
     print = ts_print
-    print("Test2\n\n\n\n\n\n\n\n\n")
+    #The following 3 lines are for testing db connections. TODO: delete this lol
+    client = MongoClient('10.3.0.3', 27017)
+    with open('testing123.txt', 'w') as dummy:
+        dummy.write(str(client.list_database_names()))
+
     print("rx packet")
     pkt = IP(packet.get_payload())
     m_pkt = MutablePacket(pkt)

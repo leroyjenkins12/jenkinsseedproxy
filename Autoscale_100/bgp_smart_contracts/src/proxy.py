@@ -49,13 +49,12 @@ def get_datetime():
 old_print = print
 
 def pkt_in(packet):
-    print("Test2\n\n\n\n\n\n\n\n\n")
     local_index = global_index.incr_index()
     def ts_print(*args, **kwargs):
         old_print(str(datetime.datetime.now()) + "--" + str(local_index), *args, **kwargs)
 
     print = ts_print
-
+    print("Test2\n\n\n\n\n\n\n\n\n")
     print("rx packet")
     pkt = IP(packet.get_payload())
     m_pkt = MutablePacket(pkt)

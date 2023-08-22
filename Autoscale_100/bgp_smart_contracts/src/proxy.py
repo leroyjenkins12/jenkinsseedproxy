@@ -58,8 +58,7 @@ def pkt_in(packet):
     print = ts_print
     #The following 3 lines are for testing db connections. TODO: delete this lol
     client = MongoClient('10.3.0.3', 27017)
-    with open('testing123.txt', 'w') as dummy:
-        dummy.write(str(client.list_database_names()))
+    print(str(client.list_database_names()))
 
     print("rx packet")
     pkt = IP(packet.get_payload())

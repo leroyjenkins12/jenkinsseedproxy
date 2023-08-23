@@ -28,14 +28,13 @@ global_index = None
 connections = None
 
 load_contrib('bgp') #scapy does not automatically load items from Contrib. Must call function and module name to load.
-print("Test\n\n\n\n\n\n\n\n\n")
 #####Synchronizes ASN with blockchain account data##################
-# tx_sender_name = "ACCOUNT"+str(sys.argv[1]) #must add an asn # after account, eg. ACCOUNT151 we do this programmatically later in program
-# tx_sender = Account(AccountType.TransactionSender, tx_sender_name)
-# #print(tx_sender)
-# tx_sender.load_account_keys()
-# tx_sender.generate_transaction_object("IANA", "IANA_CONTRACT_ADDRESS")
-# print("Transaction setup complete for: " + tx_sender_name)
+tx_sender_name = "ACCOUNT"+str(sys.argv[1]) #must add an asn # after account, eg. ACCOUNT151 we do this programmatically later in program
+tx_sender = Account(AccountType.TransactionSender, tx_sender_name)
+#print(tx_sender)
+tx_sender.load_account_keys()
+tx_sender.generate_transaction_object("IANA", "IANA_CONTRACT_ADDRESS")
+print("Transaction setup complete for: " + tx_sender_name)
 
 ################Establishes local IPTABLES Rule to begin processing packets############
 QUEUE_NUM = 1
@@ -99,7 +98,7 @@ def pkt_in(packet):
                             
                             validationResult = db_validate(segment, tx_sender)
                             print(validationResult)
-                            # validationResult = bgpchain_validate(segment, tx_sender) #checks the blockchain. Change to mongo check
+                            #validationResult = bgpchain_validate(segment, tx_sender) #checks the blockchain. Change to mongo check
                             #segment = prefix, sender = advertising asn. Returns prefix valid stuff
                             if validationResult == validatePrefixResult.prefixValid:
                                 print("NLRI " + str(count) + " passed authorization...checking next ASN")

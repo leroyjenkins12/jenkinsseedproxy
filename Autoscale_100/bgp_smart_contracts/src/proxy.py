@@ -50,6 +50,9 @@ def get_datetime():
 
 old_print = print
 
+#Set the default mongoclient to ix3
+client = MongoClient('10.3.0.3', 27017)
+
 def pkt_in(packet):
     local_index = global_index.incr_index()
     def ts_print(*args, **kwargs):
@@ -57,8 +60,7 @@ def pkt_in(packet):
 
     print = ts_print
     #The following 3 lines are for testing db connections. TODO: delete this lol
-    client = MongoClient('10.3.0.3', 27017)
-    print(str(client.list_database_names()))
+    # print(str(client.list_database_names()))
 
     print("rx packet")
     pkt = IP(packet.get_payload())
@@ -96,6 +98,7 @@ def pkt_in(packet):
                             print ("validating advertisement for ASN: " + str(update.get_origin_asn()))
                             
                             validationResult = db_validate(segment, tx_sender)
+                            print(validationResult)
                             # validationResult = bgpchain_validate(segment, tx_sender) #checks the blockchain. Change to mongo check
                             #segment = prefix, sender = advertising asn. Returns prefix valid stuff
                             if validationResult == validatePrefixResult.prefixValid:

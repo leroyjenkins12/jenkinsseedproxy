@@ -16,6 +16,7 @@ from Classes.PacketProcessing.FiveTuple import FiveTuple
 from Classes.PacketProcessing.FlowDirection import FlowDirection
 from Classes.PacketProcessing.DatabaseValidation import db_validate
 from ipaddress import IPv4Address
+from Classes.Account import Account
 import os, sys
 import datetime
 import subprocess

@@ -2,7 +2,7 @@ from multiprocessing.dummy import Process
 from dotenv import load_dotenv
 import sys
 import os
-import pyyaml
+# import pyyaml
 from Utils.Utils import *
 from Classes.Web3Obj import Web3Obj
 from Classes.Transaction import Transaction

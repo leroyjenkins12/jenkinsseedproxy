@@ -86,7 +86,7 @@ class Utils(object):
         :return chain id from .env
         """
 
-        load_dotenv("../Accounts1k.env")
+        load_dotenv()
         return int(os.getenv("CHAIN_ID"))
 
     @staticmethod

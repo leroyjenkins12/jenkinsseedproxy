@@ -34,7 +34,7 @@ tx_sender_name = "ACCOUNT"+str(sys.argv[1]) #must add an asn # after account, eg
 tx_sender = Account(AccountType.TransactionSender, tx_sender_name)
 # #print(tx_sender)
 tx_sender.load_account_keys()
-tx_sender.generate_transaction_object("IANA", "IANA_CONTRACT_ADDRESS")
+# tx_sender.generate_transaction_object("IANA", "IANA_CONTRACT_ADDRESS")
 print("Transaction setup complete for: " + tx_sender_name)
 
 ################Establishes local IPTABLES Rule to begin processing packets############
@@ -104,7 +104,7 @@ def pkt_in(packet):
                             if validationResult == validatePrefixResult.prefixValid:
                                 print("NLRI " + str(count) + " passed authorization...checking next ASN")
                             elif validationResult == validatePrefixResult.prefixNotRegistered:
-                                print("Unregistered BGP \n\n\n\n\n\n\n\n")
+                                print("Unregistered BGP")
                                 handle_unregistered_advertisement(m_pkt, nlri, validationResult, update)
                             elif validationResult == validatePrefixResult.prefixOwnersDoNotMatch:
                                 handle_invalid_advertisement(m_pkt, nlri, validationResult, update)

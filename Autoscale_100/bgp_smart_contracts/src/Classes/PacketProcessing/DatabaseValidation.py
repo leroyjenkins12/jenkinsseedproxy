@@ -21,8 +21,8 @@ def db_validate(segment, tx_sender):
     ret = collection.find({'containers.labels.net_0_address': inIP + "/" + inSubnet},
                           {{'containers.labels.asn':1,'_id':0}})
     if ret.count() == 0:
-        return validatePrefixResult.prefixNotRegistered
+        return (validatePrefixResult.prefixNotRegistered)
     elif ret == tx_sender.getASN: #bettter approach
-        return validatePrefixResult.prefixValid
+        return (validatePrefixResult.prefixValid)
     else:
-        return validatePrefixResult.prefixOwnersDoNotMatch
+        return (validatePrefixResult.prefixOwnersDoNotMatch)

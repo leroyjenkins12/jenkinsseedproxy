@@ -98,9 +98,9 @@ def pkt_in(packet):
                             print ("validating advertisement for ASN: " + str(update.get_origin_asn()))
                             
                             validationResult = db_validate(segment, tx_sender)
-                            print(type(validationResult))
-                            print(str(validationResult))
-                            
+                            # print(type(validationResult))
+                            # print(str(validationResult))
+
                             #validationResult = bgpchain_validate(segment, tx_sender) #checks the blockchain. Change to mongo check
                             #segment = prefix, sender = advertising asn. Returns prefix valid stuff
                             if validationResult == validatePrefixResult.prefixValid:

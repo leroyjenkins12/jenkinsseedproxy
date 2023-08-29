@@ -21,8 +21,11 @@ def db_validate(segment, tx_sender):
     ret = collection.find({'containers.labels.net_0_address': inIP + "/" + inSubnet},
                           {{'containers.labels.asn':1,'_id':0}})
     if ret.count() == 0:
+        print ("Prefix not registered")
         return (validatePrefixResult.prefixNotRegistered)
     elif ret == tx_sender.getASN: #bettter approach
+        print ("Prefix is valid")
         return (validatePrefixResult.prefixValid)
     else:
+        print ("Owners don't match")
         return (validatePrefixResult.prefixOwnersDoNotMatch)

@@ -65,6 +65,8 @@ def pkt_in(packet):
     tx_sender = str(sys.argv[1])
     print ("The type of sys argv 1 is :" + str(type(sys.argv[1])) + "and" + str(type(tx_sender)))
     print (tx_sender)
+    print (str(sys.argv[2]))
+    print (str(sys.argv[3]))
     print("rx packet")
     pkt = IP(packet.get_payload())
     m_pkt = MutablePacket(pkt)

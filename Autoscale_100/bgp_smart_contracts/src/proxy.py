@@ -31,7 +31,7 @@ connections = None
 load_contrib('bgp') #scapy does not automatically load items from Contrib. Must call function and module name to load.
 #####Synchronizes ASN with blockchain account data##################
 # tx_sender_name = "ACCOUNT"+str(sys.argv[1]) #must add an asn # after account, eg. ACCOUNT151 we do this programmatically later in program
-tx_sender = str(sys.argv[1]) #must add an asn # after account, eg. ACCOUNT151 we do this programmatically later in program
+ #must add an asn # after account, eg. ACCOUNT151 we do this programmatically later in program
 # tx_sender = Account(AccountType.TransactionSender, tx_sender_name)
 # # #print(tx_sender)
 # tx_sender.load_account_keys()
@@ -55,6 +55,8 @@ old_print = print
 client = MongoClient('10.3.0.3', 27017)
 
 def pkt_in(packet):
+    tx_sender = str(sys.argv[1])
+    print ("The type of sys argv 1 is :" + type(sys.argv[1]) + "and" + type(tx_sender))
     local_index = global_index.incr_index()
     def ts_print(*args, **kwargs):
         old_print(str(datetime.datetime.now()) + "--" + str(local_index), *args, **kwargs)

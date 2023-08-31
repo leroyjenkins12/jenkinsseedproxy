@@ -55,8 +55,6 @@ old_print = print
 client = MongoClient('10.3.0.3', 27017)
 
 def pkt_in(packet):
-    tx_sender = str(sys.argv[1])
-    print ("The type of sys argv 1 is :" + type(sys.argv[1]) + "and" + type(tx_sender))
     local_index = global_index.incr_index()
     def ts_print(*args, **kwargs):
         old_print(str(datetime.datetime.now()) + "--" + str(local_index), *args, **kwargs)
@@ -64,6 +62,8 @@ def pkt_in(packet):
     print = ts_print
     #The following 3 lines are for testing db connections. TODO: delete this lol
     # print(str(client.list_database_names()))
+    tx_sender = str(sys.argv[1])
+    print ("The type of sys argv 1 is :" + type(sys.argv[1]) + "and" + type(tx_sender))
 
     print("rx packet")
     pkt = IP(packet.get_payload())

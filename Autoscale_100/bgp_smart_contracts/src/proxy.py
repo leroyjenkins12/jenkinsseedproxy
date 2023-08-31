@@ -63,7 +63,7 @@ def pkt_in(packet):
     #The following 3 lines are for testing db connections. TODO: delete this lol
     # print(str(client.list_database_names()))
     tx_sender = str(sys.argv[1])
-    print ("The type of sys argv 1 is :" + type(sys.argv[1]) + "and" + type(tx_sender))
+    print ("The type of sys argv 1 is :" + str(type(sys.argv[1])) + "and" + str(type(tx_sender)))
 
     print("rx packet")
     pkt = IP(packet.get_payload())

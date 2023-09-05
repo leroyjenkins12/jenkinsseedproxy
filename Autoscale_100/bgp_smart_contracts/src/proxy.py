@@ -72,6 +72,8 @@ def pkt_in(packet):
     m_pkt = MutablePacket(pkt)
     # TODO: wrap this pkt with an m_pkt class. can track packet modifications
     print(packet)
+    print("The source ip address is:")
+    print(m_pkt.src)
     print(m_pkt.show())
 
     if not connections.connection_exists(m_pkt):

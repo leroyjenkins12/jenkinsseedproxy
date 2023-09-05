@@ -62,19 +62,13 @@ def pkt_in(packet):
     print = ts_print
     #The following 3 lines are for testing db connections. TODO: delete this lol
     # print(str(client.list_database_names()))
-    tx_sender = str(sys.argv[1])
-    print ("The type of sys argv 1 is :" + str(type(sys.argv[1])) + "and" + str(type(tx_sender)))
-    print (tx_sender)
-    print (str(sys.argv[0]))
-    print (str(sys.argv[1]))
+
     print("rx packet")
     pkt = IP(packet.get_payload())
     m_pkt = MutablePacket(pkt)
     # TODO: wrap this pkt with an m_pkt class. can track packet modifications
     print(packet)
-    print("The source ip address is:")
-    print(m_pkt.ipsrc())
-    print(m_pkt.show())
+
 
     if not connections.connection_exists(m_pkt):
         connections.add_connection(m_pkt)
@@ -104,7 +98,7 @@ def pkt_in(packet):
                             print ("Advertised Segment: " + str(segment))
                             print ("validating advertisement for ASN: " + str(update.get_origin_asn()))
                             
-                            validationResult = db_validate(segment, tx_sender)
+                            validationResult = db_validate(segment)
                             # print(type(validationResult))
                             # print(str(validationResult))
 

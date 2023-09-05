@@ -11,14 +11,9 @@ class MutablePacket():
         self.ack_num = pkt[TCP].ack
         self.seq_num = pkt[TCP].seq
 
-        self.src_ip = pkt[UPDATE].prefix
-
         self.headers_modified = False
         self.diff = 0
         self.new_IP_len = 0
-
-    def ipsrc(self):
-        return self.src_ip
 
     def ack(self):
         return self.ack_num

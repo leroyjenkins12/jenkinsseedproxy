@@ -7,12 +7,11 @@ client = pymongo.MongoClient('10.3.0.3', 27017)
 db = client["bgp_db"]
 collection = db["known_bgp"]
 
-def db_validate(segment, tx_sender):
+def db_validate(segment):
 
     inIP = IPv4Address(segment[1])
     inSubnet = int(segment[2])
     inASN = int(segment[0])
-    print (tx_sender)
     print ("Validating segment: AS" + str(inASN)+ " , " + str(inIP) + "/" + str(inSubnet))
     
     # tx_sender.generate_transaction_object("IANA", "IANA_CONTRACT_ADDRESS")
@@ -23,7 +22,7 @@ def db_validate(segment, tx_sender):
     if ret.count() == 0:
         print ("Prefix not registered")
         return (validatePrefixResult.prefixNotRegistered)
-    elif ret == tx_sender.getASN: #bettter approach
+    elif ret == inASN: #better approach
         print ("Prefix is valid")
         return (validatePrefixResult.prefixValid)
     else:

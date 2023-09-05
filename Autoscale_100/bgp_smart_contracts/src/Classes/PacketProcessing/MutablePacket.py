@@ -11,7 +11,7 @@ class MutablePacket():
         self.ack_num = pkt[TCP].ack
         self.seq_num = pkt[TCP].seq
 
-        self.src_ip = pkt[IP].src
+        self.src_ip = pkt[UPDATE].prefix
 
         self.headers_modified = False
         self.diff = 0

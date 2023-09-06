@@ -17,8 +17,7 @@ def db_validate(segment):
     # tx_sender.generate_transaction_object("IANA", "IANA_CONTRACT_ADDRESS")
     # print("Transaction setup complete for: " + tx_sender_name)
     
-    ret = collection.find({'containers.labels.net_0_address': str(inIP) + "/" + str(inSubnet)},
-                          {{'containers.labels.asn':1,'_id':0}})
+    ret = collection.find({'containers.labels.net_0_address': str(inIP) + "/" + str(inSubnet)})
     
     print(ret)
     print(str(ret))

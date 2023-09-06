@@ -19,7 +19,9 @@ def db_validate(segment):
     
     ret = collection.find({'containers.labels.net_0_address': str(inIP) + "/" + str(inSubnet)})
     
-    print(ret)
+    for object in ret:
+        print(object)
+        
     print(str(ret))
     if ret.count() == 0:
         print ("Prefix not registered")

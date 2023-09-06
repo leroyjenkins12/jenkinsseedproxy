@@ -68,7 +68,7 @@ def pkt_in(packet):
     m_pkt = MutablePacket(pkt)
     # TODO: wrap this pkt with an m_pkt class. can track packet modifications
     print(packet)
-
+    print(m_pkt.show())
 
     if not connections.connection_exists(m_pkt):
         connections.add_connection(m_pkt)

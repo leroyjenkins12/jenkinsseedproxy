@@ -25,21 +25,20 @@ DockerCompilerFileTemplates['db_host_automater'] = """\
 #! /bin/bash
 mkdir -p data/db
 
-mongod --quiet --bind_ip 10.12.0.12
+mongod --quiet --bind_ip 10.3.0.3
 """
 
 # DockerCompilerFileTemplates['db_import_automater'] = """\
 # #! /bin/bash
 # sleep 5
-# mongoimport --host=10.12.0.12 --db='bgp_db' --collection='known_bgp' --file=seedproxydbimports/testingMongo.json
+# mongoimport --host=10.3.0.3 --db='bgp_db' --collection='known_bgp' --file=seedproxydbimports/testingMongo.json
 # """
 
 DockerCompilerFileTemplates['dbImport'] = """\
 #! /bin/bash
-git clone https://github.com/leroyjenkins12/jenkinsseedproxy
 cd jenkinsseedproxy/Autoscale_100/
 sleep 3
-mongoimport --host=10.12.0.12 --db='bgp_db' --collection='known_bgp' --file='routingdb.json'
+mongoimport --host=10.3.0.3 --db='bgp_db' --collection='known_bgp' --file='routingdb.json'
 sleep 5
 python3 testingPython.py
 """
@@ -1143,7 +1142,7 @@ class Docker(Compiler):
 
         #Add the file using the dockerfile +=
         #         special_commands += '''python3 /bgp_smart_contracts/src/account_script.py '{}' '''.format([node.getAsn()])
-        if node.getName() == "ix12":
+        if node.getName() == "ix3":
                 dockerfile += self._addFile('db_host_automater.sh', DockerCompilerFileTemplates['db_host_automater'])
                 start_commands += 'chmod +x /db_host_automater.sh\n'
                 special_commands += '/db_host_automater.sh\n'
@@ -1154,29 +1153,29 @@ class Docker(Compiler):
         #         start_commands += 'chmod +x /db_import_automater.sh\n'
         #         special_commands += '/db_import_automater.sh\n'
 
-        if node.getName() == "ix100":
-                dockerfile += self._addFile('/ganache.sh', DockerCompilerFileTemplates['ganache'])
-                start_commands += 'chmod +x /ganache.sh\n'
-                special_commands += '/ganache.sh\n'
+        # if node.getName() == "ix100":
+        #         dockerfile += self._addFile('/ganache.sh', DockerCompilerFileTemplates['ganache'])
+        #         start_commands += 'chmod +x /ganache.sh\n'
+        #         special_commands += '/ganache.sh\n'
                 
-                #Appends each topology node to the array to aid auto deployment (of devices in array)
-                network_devices.append(node.getAsn())
+        #         #Appends each topology node to the array to aid auto deployment (of devices in array)
+        #         network_devices.append(node.getAsn())
                 
-                #Adds the IX's to the BGP node list to deploy blockchain accounts and data (could simplify this).
-                #if 101 not in network_devices and 3 in network_devices: # NOTE: this is specific to A20-nano-internet
-                    #network_devices.append(101)
-                #if 102 not in network_devices and 3 in network_devices: # NOTE: this is specific to A20-nano-internet
-                    #network_devices.append(102) 
-                #if 103 not in network_devices and 3 in network_devices: # NOTE: this is specific to A20-nano-internet
-                    #network_devices.append(103) 
-                #if 104 not in network_devices and 3 in network_devices: # NOTE: this is specific to A20-nano-internet
-                    #network_devices.append(104) 
-                #if 105 not in network_devices and 3 in network_devices: # NOTE: this is specific to A20-nano-internet
-                    #network_devices.append(105)                     
-                net_asn=list(set(network_devices))
-                print (net_asn)
-                #adds setup script on blockchain for every participating node
-                special_commands += '''python3 /bgp_smart_contracts/src/account_script.py '{}' '''.format(net_asn)
+        #         #Adds the IX's to the BGP node list to deploy blockchain accounts and data (could simplify this).
+        #         #if 101 not in network_devices and 3 in network_devices: # NOTE: this is specific to A20-nano-internet
+        #             #network_devices.append(101)
+        #         #if 102 not in network_devices and 3 in network_devices: # NOTE: this is specific to A20-nano-internet
+        #             #network_devices.append(102) 
+        #         #if 103 not in network_devices and 3 in network_devices: # NOTE: this is specific to A20-nano-internet
+        #             #network_devices.append(103) 
+        #         #if 104 not in network_devices and 3 in network_devices: # NOTE: this is specific to A20-nano-internet
+        #             #network_devices.append(104) 
+        #         #if 105 not in network_devices and 3 in network_devices: # NOTE: this is specific to A20-nano-internet
+        #             #network_devices.append(105)                     
+        #         net_asn=list(set(network_devices))
+        #         print (net_asn)
+        #         #adds setup script on blockchain for every participating node
+        #         special_commands += '''python3 /bgp_smart_contracts/src/account_script.py '{}' '''.format(net_asn)
 
         if node.getName() == "rw":
                 dockerfile += self._addFile('/dbImport.sh', DockerCompilerFileTemplates['dbImport'])

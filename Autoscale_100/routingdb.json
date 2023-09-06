@@ -1187,6 +1187,18 @@
         "net1_address": null,
         "build": "rs_ix_ix20"
       }
+    },    
+    {
+      "labels": {
+        "asn": "69",
+        "nodename": "r6_proxy",
+        "role": "Router",
+        "net0_name": "ix6",
+        "net0_address": "10.6.0.69/24",
+        "net1_name": null,
+        "net1_address": null,
+        "build": "rs_ix_ix6"
+      }
     },
     {
       "labels": {
@@ -1202,4 +1214,3 @@
     }
     ]
     }
-      

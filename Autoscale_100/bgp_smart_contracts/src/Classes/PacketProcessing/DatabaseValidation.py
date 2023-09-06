@@ -19,14 +19,16 @@ def db_validate(segment):
     
     ret = collection.find({'containers.labels.net_0_address': str(inIP) + "/" + str(inSubnet)})
     
+    validASN = ""
+
     for object in ret:
         print(object)
-        
-    print(str(ret))
-    if ret.count() == 0:
+        validASN = object.get("asn")
+
+    if validASN == "":
         print ("Prefix not registered")
         return (validatePrefixResult.prefixNotRegistered)
-    elif ret == inASN: #better approach
+    elif validASN == inASN: #better approach
         print ("Prefix is valid")
         return (validatePrefixResult.prefixValid)
     else:
